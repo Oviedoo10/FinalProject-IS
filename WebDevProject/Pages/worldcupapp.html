@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>World Cup Penalty Shootout</title>
+
+
+<style>
+    body{
+        font-family: Arial, sans-serif;
+        background: linear-gradient(#1f426e, #2f3e74);
+        color: white;
+        text-align: center;
+        margin: 0;
+        padding: 25px;
+    }
+
+    .app-container{
+        max-width: 950px;
+        margin: auto;
+        background-color: #123b63;
+        padding: 30px;
+        border-radius: 18px;
+        border: 4px solid gold;
+        box-shadow: 0 0 25px rgba(255,215,0,0.4);
+    }
+
+    h1{
+        color: gold;
+        font-size: 42px;
+        margin-bottom: 10px;
+    }
+
+    select, button{
+        padding: 12px;
+        margin: 8px;
+        font-size: 18px;
+        border-radius: 8px;
+        border: none;
+    }
+
+    button{
+        background-color: gold;
+        color: #061a33;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:hover{
+        background-color: white;
+    }
+
+    .stadium{
+        width: 100%;
+        max-width: 760px;
+        height: 440px;
+        margin: 25px auto;
+        background: linear-gradient(#1b7f45 0%, #2e8b57 60%, #146c39 100%);
+        border-radius: 15px;
+        position: relative;
+        overflow: hidden;
+        border: 5px solid white;
+    }
+
+    .goal{
+        width: 600px;
+        height: 240px;
+        border: 8px solid white;
+        border-bottom: none;
+        position: absolute;
+        top: 35px;
+        left: 50%;
+        transform: translateX(-50%);
+        background:
+            linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px),
+            linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px);
+        background-size: 40px 40px;
+    }
+
+    .zone-label{
+        position: absolute;
+        top: 285px;
+        font-weight: bold;
+        color: gold;
+        font-size: 18px;
+    }
+
+    .left-label{ left: 125px; }
+    .center-label{ left: 345px; }
+    .right-label{ right: 125px; }
+
+    #keeper{
+        position: absolute;
+        top: 165px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 70px;
+        transition: all 0.7s ease;
+        z-index: 3;
+    }
+
+    #ball{
+        position: absolute;
+        bottom: 35px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 45px;
+        transition: all 0.7s ease;
+        z-index: 4;
+    }
+
+    .penalty-spot{
+        position: absolute;
+        bottom: 82px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 14px;
+        height: 14px;
+        background-color: white;
+        border-radius: 50%;
+    }
+
+    .field-line{
+        position: absolute;
+        bottom: 70px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 260px;
+        height: 120px;
+        border: 4px solid white;
+        border-bottom: none;
+        border-radius: 140px 140px 0 0;
+        opacity: 0.7;
+    }
+
+    #result{
+        margin-top: 20px;
+        font-size: 24px;
+        background-color: rgba(255,255,255,0.12);
+        padding: 20px;
+        border: 3px solid gold;
+        border-radius: 10px;
+        min-height: 70px;
+    }
+
+    .scoreboard{
+        background-color: rgba(255,255,255,0.12);
+        padding: 15px;
+        margin-top: 20px;
+        border-left: 6px solid gold;
+        font-size: 20px;
+        border-radius: 10px;
+    }
+
+    .nav-link{
+        display: inline-block;
+        margin-top: 25px;
+        color: gold;
+        font-weight: bold;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app-container">
+    <div style="margin-bottom:20px;">
+
+    <a href="../index.html">
+        <button>Home</button>
+    </a>
+
+    <a href="worldcup2026.html">
+        <button>World Cup 2026</button>
+    </a>
+
+    <a href="worldcupstats.html">
+        <button>World Cup Statistics</button>
+    </a>
+
+</div>
+
+    <h1>World Cup Penalty Shootout</h1>
+
+    <p>Choose your country, pick where to shoot, and try to beat the goalkeeper.</p>
+
+    <label for="team">Choose your team:</label>
+
+    <select id="team">
+        <option value="Argentina">Argentina</option>
+        <option value="Brazil">Brazil</option>
+        <option value="France">France</option>
+        <option value="Spain">Spain</option>
+        <option value="England">England</option>
+        <option value="Germany">Germany</option>
+        <option value="Portugal">Portugal</option>
+        <option value="Mexico">Mexico</option>
+        <option value="United States">United States</option>
+        <option value="Netherlands">Netherlands</option>
+    </select>
+
+    <div class="stadium">
+        <div class="goal"></div>
+
+        <div id="keeper">🧍‍♂️</div>
+        <div id="ball">⚽</div>
+
+        <div class="field-line"></div>
+        <div class="penalty-spot"></div>
+
+        <div class="zone-label left-label">Left</div>
+        <div class="zone-label center-label">Center</div>
+        <div class="zone-label right-label">Right</div>
+    </div>
+
+    <h2>Where do you want to shoot?</h2>
+
+    <button onclick="takeShot('Left')">Shoot Left</button>
+    <button onclick="takeShot('Center')">Shoot Center</button>
+    <button onclick="takeShot('Right')">Shoot Right</button>
+
+    <div id="result">
+        Pick a side and take your penalty.
+    </div>
+
+    <div class="scoreboard">
+        <p><strong>Goals:</strong> <span id="goals">0</span></p>
+        <p><strong>Saves:</strong> <span id="saves">0</span></p>
+        <p><strong>Total Shots:</strong> <span id="shots">0</span></p>
+        <p><strong>Scoring Percentage:</strong> <span id="percentage">0%</span></p>
+    </div>
+
+    <button onclick="resetGame()">Reset Game</button>
+
+    <br>
+
+    <a class="nav-link" href="Pages/scratch.html">Back to Scratch Page</a>
+
+</div>
+
+<script>
+    var goals = 0;
+    var saves = 0;
+    var shots = 0;
+    var isShooting = false;
+
+    function takeShot(playerShot){
+        if(isShooting === true){
+            return;
+        }
+
+        isShooting = true;
+
+        var team = document.getElementById("team").value;
+        var directions = ["Left", "Center", "Right"];
+        var keeperDive = directions[Math.floor(Math.random() * directions.length)];
+
+        var ball = document.getElementById("ball");
+        var keeper = document.getElementById("keeper");
+        var result = document.getElementById("result");
+
+        ball.style.transition = "none";
+        keeper.style.transition = "none";
+
+        ball.style.left = "50%";
+        ball.style.bottom = "35px";
+        ball.style.transform = "translateX(-50%) scale(1)";
+
+        keeper.style.left = "50%";
+        keeper.style.top = "165px";
+        keeper.style.transform = "translateX(-50%) rotate(0deg)";
+        keeper.innerHTML = "🧍‍♂️";
+
+        setTimeout(function(){
+            ball.style.transition = "all 0.75s ease";
+            keeper.style.transition = "all 0.75s ease";
+
+            if(playerShot === "Left"){
+                ball.style.left = "24%";
+                ball.style.bottom = "270px";
+            }
+            else if(playerShot === "Center"){
+                ball.style.left = "50%";
+                ball.style.bottom = "260px";
+            }
+            else{
+                ball.style.left = "76%";
+                ball.style.bottom = "270px";
+            }
+
+            if(keeperDive === "Left"){
+                keeper.style.left = "27%";
+                keeper.style.top = "150px";
+                keeper.style.transform = "translateX(-50%) rotate(-35deg)";
+                keeper.innerHTML = "🤾‍♂️";
+            }
+            else if(keeperDive === "Center"){
+                keeper.style.left = "50%";
+                keeper.style.top = "135px";
+                keeper.style.transform = "translateX(-50%) scale(1.15)";
+                keeper.innerHTML = "🙆‍♂️";
+            }
+            else{
+                keeper.style.left = "73%";
+                keeper.style.top = "150px";
+                keeper.style.transform = "translateX(-50%) rotate(35deg)";
+                keeper.innerHTML = "🤾‍♂️";
+            }
+        }, 100);
+
+        setTimeout(function(){
+            shots++;
+
+            if(playerShot === keeperDive){
+                saves++;
+                result.innerHTML =
+                    "🧤 SAVED!<br>" +
+                    team + " shot to the " + playerShot +
+                    ", but the goalkeeper jumped to the " + keeperDive + ".";
+            }
+            else{
+                goals++;
+                result.innerHTML =
+                    "⚽ GOAL!<br>" +
+                    team + " shot to the " + playerShot +
+                    ", and the goalkeeper jumped to the " + keeperDive + ".";
+            }
+
+            updateScoreboard();
+            isShooting = false;
+        }, 900);
+    }
+
+    function updateScoreboard(){
+        var percentage = 0;
+
+        if(shots > 0){
+            percentage = Math.round((goals / shots) * 100);
+        }
+
+        document.getElementById("goals").innerHTML = goals;
+        document.getElementById("saves").innerHTML = saves;
+        document.getElementById("shots").innerHTML = shots;
+        document.getElementById("percentage").innerHTML = percentage + "%";
+    }
+
+    function resetGame(){
+        goals = 0;
+        saves = 0;
+        shots = 0;
+        isShooting = false;
+
+        document.getElementById("result").innerHTML =
+            "Pick a side and take your penalty.";
+
+        document.getElementById("ball").style.left = "50%";
+        document.getElementById("ball").style.bottom = "35px";
+        document.getElementById("ball").style.transform = "translateX(-50%) scale(1)";
+
+        document.getElementById("keeper").style.left = "50%";
+        document.getElementById("keeper").style.top = "165px";
+        document.getElementById("keeper").style.transform = "translateX(-50%) rotate(0deg)";
+        document.getElementById("keeper").innerHTML = "🧍‍♂️";
+
+        updateScoreboard();
+    }
+</script>
+
+</body>
+</html>
